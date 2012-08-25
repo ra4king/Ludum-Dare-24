@@ -1,4 +1,4 @@
-package com.ra4king.opengl.util.math;
+package com.ra4king.ld24.util.math;
 
 public class Quaternion {
 	private float x, y, z, w;

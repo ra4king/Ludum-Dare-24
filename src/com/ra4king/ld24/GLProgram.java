@@ -1,4 +1,4 @@
-package com.ra4king.opengl;
+package com.ra4king.ld24;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.util.glu.GLU.*;

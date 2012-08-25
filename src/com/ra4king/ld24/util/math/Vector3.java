@@ -1,4 +1,4 @@
-package com.ra4king.opengl.util.math;
+package com.ra4king.ld24.util.math;
 
 public class Vector3 {
 	private float x, y, z;

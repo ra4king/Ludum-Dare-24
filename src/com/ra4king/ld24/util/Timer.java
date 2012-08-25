@@ -1,4 +1,4 @@
-package com.ra4king.opengl.util;
+package com.ra4king.ld24.util;
 
 public class Timer {
 	public enum Type {

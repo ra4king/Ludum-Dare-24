@@ -1,4 +1,4 @@
-package com.ra4king.opengl.test;
+package com.ra4king.ld24.test;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -12,10 +12,10 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import com.ra4king.opengl.GLProgram;
-import com.ra4king.opengl.util.ShaderProgram;
-import com.ra4king.opengl.util.math.Matrix4;
-import com.ra4king.opengl.util.math.Vector3;
+import com.ra4king.ld24.GLProgram;
+import com.ra4king.ld24.util.ShaderProgram;
+import com.ra4king.ld24.util.math.Matrix4;
+import com.ra4king.ld24.util.math.Vector3;
 
 public class Test extends GLProgram {
 	public static void main(String[] args) {
