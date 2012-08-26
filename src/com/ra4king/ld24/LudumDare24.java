@@ -17,6 +17,15 @@ public class LudumDare24 extends Game{
 	
 	@Override
 	public void initGame() {
+		try {
+			getArt().add("images/amoeba.png");
+			getArt().add("images/amoeba-splits.png");
+		}
+		catch(Exception exc) {
+			exc.printStackTrace();
+			System.exit(0);
+		}
+		
 		setScreen("Arena", new Arena());
 	}
 }
