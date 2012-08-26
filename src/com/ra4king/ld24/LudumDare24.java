@@ -7,7 +7,7 @@ public class LudumDare24 extends Game{
 	
 	public static void main(String[] args) {
 		LudumDare24 game = new LudumDare24();
-		game.setupFrame("Ludum Dare 24", false);
+		game.setupFrame("Ludum Dare 24", true);
 		game.start();
 	}
 	
