@@ -27,8 +27,13 @@ public class Arena extends GameWorld {
 	}
 	
 	private void spawnUnit() {
-		Unit u = (Unit)add(new Unit(UnitType.AMOEBA));
+		Unit u = (Unit)add(1,new Unit(UnitType.AMOEBA, 0));
 		u.setLocation(Math.random() * (getWidth()-u.getWidth()), Math.random() * (getHeight()-u.getHeight()));
+	}
+	
+	private void spawnFoods() {
+		for(int a = 0; a < 50; a++)
+			add(0,new Food(Math.random() * (getWidth() - 3), Math.random() * (getHeight() - 3)));
 	}
 	
 	@Override
@@ -41,7 +46,10 @@ public class Arena extends GameWorld {
 			elapsedTime -= 1e9;
 			
 			spawnUnit();
+			spawnFoods();
 		}
+		
+		hud.update(deltaTime);
 	}
 	
 	@Override
