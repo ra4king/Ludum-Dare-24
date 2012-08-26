@@ -45,7 +45,7 @@ public class Arena extends GameWorld {
 		if(elapsedTime >= 1e9) {
 			elapsedTime -= 1e9;
 			
-			spawnUnit();
+			//spawnUnit();
 			spawnFoods();
 			
 			System.out.println("food: " + getEntitiesAt(0).size() + "; units: " + getEntitiesAt(1).size() + "; total: " + getEntities().size());
