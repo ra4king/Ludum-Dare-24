@@ -1,5 +1,6 @@
 package com.ra4king.ld24;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 
 import com.ra4king.gameutils.gameworld.GameComponent;
@@ -23,10 +24,20 @@ public class Unit extends GameComponent {
 	//private UnitType type;
 	private double rot;
 	
+	private boolean highlighted;
+	
 	public Unit(UnitType type) {
 		//this.type = type;
 		
 		setSize(type.width, type.height);
+	}
+	
+	public boolean isHighlighted() {
+		return highlighted;
+	}
+	
+	public void setHighlighted(boolean highlighted) {
+		this.highlighted = highlighted;
 	}
 	
 	@Override
@@ -45,6 +56,12 @@ public class Unit extends GameComponent {
 		//g.drawImage(animation.getFrame(), getIntX(), getIntY(), null);
 		
 		g.rotate(rot, getCenterX(), getCenterY());
+		g.setColor(Color.black);
 		g.fill(getBounds());
+		
+		if(highlighted) {
+			g.setColor(Color.green);
+			g.draw(getBounds());
+		}
 	}
 }

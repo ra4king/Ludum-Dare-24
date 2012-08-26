@@ -35,10 +35,6 @@ public class HUD {
 	}
 	
 	public void mouseReleased(MouseEvent me) {
-		for(Entity e : arena.getEntities())
-			if(e instanceof Unit && highlight.intersects(((Unit)e).getBounds()))
-				selected.add((Unit)e);
-		
 		highlight = null;
 		origin = null;
 	}
@@ -63,6 +59,19 @@ public class HUD {
 		else {
 			highlight.y = origin.y;
 			highlight.height = dy;
+		}
+		
+		selected.clear();
+		for(Entity e : arena.getEntities()) {
+			if(e instanceof Unit) {
+				Unit u = (Unit)e;
+				u.setHighlighted(false);
+				
+				if(highlight.intersects(((Unit)e).getBounds())) {
+					selected.add(u);
+					u.setHighlighted(true);
+				}
+			}
 		}
 	}
 	
