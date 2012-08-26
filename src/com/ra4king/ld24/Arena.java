@@ -47,6 +47,8 @@ public class Arena extends GameWorld {
 			
 			spawnUnit();
 			spawnFoods();
+			
+			System.out.println("food: " + getEntitiesAt(0).size() + "; units: " + getEntitiesAt(1).size() + "; total: " + getEntities().size());
 		}
 		
 		hud.update(deltaTime);
