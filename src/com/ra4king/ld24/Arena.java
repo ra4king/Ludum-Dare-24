@@ -34,7 +34,8 @@ public class Arena extends GameWorld {
 	}
 	
 	private void spawnFoods() {
-		for(int a = 0; a < 100 * Math.random() + 20; a++)
+		double foodCount = (100.0 * Math.random()) + 20;
+		for(int a = 0; a < foodCount; a++)
 			add(0,new Food(Math.random() * (getWidth() - 3), Math.random() * (getHeight() - 3)));
 	}
 	
