@@ -2,16 +2,16 @@ package com.ra4king.ld24;
 
 import com.ra4king.gameutils.Game;
 
-public class LudumDare24 extends Game {
+public class CellWar extends Game {
 	private static final long serialVersionUID = 1L;
 	
 	public static void main(String[] args) {
-		LudumDare24 game = new LudumDare24();
+		CellWar game = new CellWar();
 		game.setupFrame("Ludum Dare 24", true);
 		game.start();
 	}
 	
-	public LudumDare24() {
+	public CellWar() {
 		super(1024, 768);
 	}
 	
