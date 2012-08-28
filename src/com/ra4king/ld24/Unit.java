@@ -187,8 +187,6 @@ public class Unit extends GameComponent {
 				if(!isSplitting && target != null && getParent().contains(target)) {
 					double r = FastMath.atan2(target.getY() - getCenterY(), target.getX() - getCenterX());
 					
-					r %= (2*Math.PI);
-					
 					while(r < 0)
 						r += 2*Math.PI;
 					
@@ -211,7 +209,7 @@ public class Unit extends GameComponent {
 						checkForSplit();
 					}
 				}
-				else
+				else if(!isSplitting)
 					target = getClosestFood();
 			}
 			else {
