@@ -29,6 +29,7 @@ public class Arena extends GameWorld {
 		
 		u = (Unit)add(1,new Unit(UnitType.CELL, 1));
 		u.setLocation(getWidth() - u.getWidth(), getHeight() - u.getHeight());
+		u.setRotation(-Math.PI);
 		
 		spawnFoods();
 	}

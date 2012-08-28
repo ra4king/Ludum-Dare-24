@@ -129,6 +129,14 @@ public class Unit extends GameComponent {
 		destination = dest;
 	}
 	
+	public double getRotation() {
+		return rot;
+	}
+	
+	public void setRotation(double rot) {
+		this.rot = rot;
+	}
+	
 	@Override
 	public void show() {
 		normal = new Animation(true);
@@ -184,7 +192,9 @@ public class Unit extends GameComponent {
 			final double delta = deltaTime / 1e9;
 			
 			if(destination == null) {
-				if(!isSplitting && target != null && getParent().contains(target)) {
+				if(!isSplitting) {
+					target = getClosestFood();
+					
 					double r = FastMath.atan2(target.getY() - getCenterY(), target.getX() - getCenterX());
 					
 					while(r < 0)
@@ -209,8 +219,6 @@ public class Unit extends GameComponent {
 						checkForSplit();
 					}
 				}
-				else if(!isSplitting)
-					target = getClosestFood();
 			}
 			else {
 				rot = FastMath.atan2(destination.y - getCenterY(), destination.x - getCenterX());
