@@ -61,7 +61,10 @@ public class HUD {
 		origin = new Point2D.Double(me.getX(),me.getY());
 		highlight = new Rectangle2D.Double(origin.x,origin.y,0,0);
 		
-		selected.clear();
+		if(me.getButton() == MouseEvent.BUTTON3) {
+			for(Unit u : selected)
+				u.setDestination(new Point2D.Double(me.getPoint().x,me.getPoint().y));
+		}
 	}
 	
 	public void mouseReleased(MouseEvent me) {

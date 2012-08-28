@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
 import com.ra4king.gameutils.Art;
@@ -15,7 +16,7 @@ import com.ra4king.gameutils.util.FastMath;
 
 public class Unit extends GameComponent {
 	public static enum UnitType {
-		AMOEBA(50,50,20,10);
+		AMOEBA(50,50,100,10);
 //		DIATOM(40,40,40),
 //		KRILL(40,40,50),
 //		SLUG(50,50,60);
@@ -23,7 +24,7 @@ public class Unit extends GameComponent {
 		private BufferedImage[][] frames, split;
 		private int width, height, initialHealth, foodToSplit;
 		
-		UnitType(int width, int height, int initialHealth, int foodToSplit) {
+		private UnitType(int width, int height, int initialHealth, int foodToSplit) {
 			this.width = width;
 			this.height = height;
 			this.initialHealth = initialHealth;
@@ -38,6 +39,17 @@ public class Unit extends GameComponent {
 		}
 	}
 	
+	private static enum TeamColor {
+		ONE(Color.red),
+		TWO(Color.green);
+		
+		private Color color;
+		
+		private TeamColor(Color color) {
+			this.color = color;
+		}
+	}
+	
 	private Animation normal, splitting;
 	private UnitType type;
 	private int team;
@@ -45,7 +57,12 @@ public class Unit extends GameComponent {
 	
 	private Food target;
 	private int foodEaten;
+	
+	private Point2D.Double destination;
+	
 	private final double speed = 100;
+	
+	private long elapsedTime;
 	
 	private int health;
 	
@@ -73,8 +90,6 @@ public class Unit extends GameComponent {
 		setBounds(u.getX() + u.getWidth(), u.getY(), type.width, type.height);
 		
 		rot = u.rot + Math.PI;
-		
-		isHighlighted = u.isHighlighted;
 	}
 	
 	@Override
@@ -107,6 +122,14 @@ public class Unit extends GameComponent {
 	
 	public int getHealth() {
 		return health;
+	}
+	
+	public Point2D.Double getDestination() {
+		return destination;
+	}
+	
+	public void setDestination(Point2D.Double dest) {
+		destination = dest;
 	}
 	
 	@Override
@@ -147,62 +170,120 @@ public class Unit extends GameComponent {
 	
 	@Override
 	public void update(long deltaTime) {
-		if(isSplitting) {
-			if(splitting.isDone()) {
-				getParent().add(1, new Unit(this));
-				isSplitting = false;
+		if(isAlive) {
+			elapsedTime += deltaTime;
+			
+			if(isSplitting) {
+				if(splitting.isDone()) {
+					getParent().add(1, new Unit(this));
+					isSplitting = false;
+				}
+				else
+					splitting.update(deltaTime);
 			}
 			else
-				splitting.update(deltaTime);
-		}
-		else
-			normal.update(deltaTime);
-		
-		final double delta = deltaTime / 1e9;
-		
-		if(!isSplitting && target != null && getParent().contains(target)) {
-			double r = FastMath.atan2(target.getY() - getCenterY(), target.getX() - getCenterX());
+				normal.update(deltaTime);
 			
-			if(Math.abs(r - rot) > Math.PI)
-				r = r-(2*Math.PI);
+			final double delta = deltaTime / 1e9;
 			
-			rot += (r-rot) * (5*delta);
-			
-			double dx = FastMath.cos(rot) * speed * delta;
-			double dy = FastMath.sin(rot) * speed * delta;
-			
-			setX(getX() + dx);
-			setY(getY() + dy);
-			
-			if(this.intersects(target)) {
-				getParent().remove(target);
-				target = null;
-				foodEaten++;
+			if(destination == null) {
+				if(!isSplitting && target != null && getParent().contains(target)) {
+					double r = FastMath.atan2(target.getY() - getCenterY(), target.getX() - getCenterX());
+					
+					if(Math.abs(r - rot) > Math.PI)
+						r = r-(2*Math.PI);
+					
+					rot += (r-rot) * (5*delta);
+					
+					double dx = FastMath.cos(rot) * speed * delta;
+					double dy = FastMath.sin(rot) * speed * delta;
+					
+					setX(getX() + dx);
+					setY(getY() + dy);
+					
+					if(target.intersects(this)) {
+						getParent().remove(target);
+						target = null;
+						foodEaten++;
+						health = Math.min(health+10, type.initialHealth);
+						checkForSplit();
+					}
+				}
+				else
+					target = getClosestFood();
+			}
+			else {
+				rot = FastMath.atan2(destination.y - getCenterY(), destination.x - getCenterX());
 				
-				checkForSplit();
+				double dx = FastMath.cos(rot) * speed * delta;
+				double dy = FastMath.sin(rot) * speed * delta;
+				
+				setX(getX() + dx);
+				setY(getY() + dy);
+				
+				if(getBounds().contains(destination)) {
+					destination = null;
+					target = null;
+				}
+			}
+			
+			for(Entity e : getParent().getEntities()) {
+				if(e instanceof Food && ((Food)e).intersects(this)) {
+					getParent().remove(e);
+					foodEaten++;
+					health = Math.min(health+10, type.initialHealth);
+					checkForSplit();
+				}
+				else if(e instanceof Unit && ((Unit)e).intersects(this)) {
+					Unit u = (Unit)e;
+					
+					if(!u.isAlive) {
+						getParent().remove(u);
+						foodEaten++;
+						health = Math.min(health+1, type.initialHealth);
+						checkForSplit();
+					}
+					else if(u.team != team) {
+						u.health--;
+						rot = (rot + Math.PI) % (2*Math.PI);
+					}
+				}
+			}
+			
+			if(elapsedTime >= 5e8) {
+				elapsedTime -= 5e8;
+				health -= 10;
+			}
+			
+			if(health <= 0) {
+				isAlive = false;
+				setSize(getWidth()/2, getHeight()/2);
+				getParent().add(0,new Food(getCenterX(), getCenterY()));
 			}
 		}
-		else
-			target = getClosestFood();
 	}
 	
 	@Override
 	public void draw(Graphics2D g) {
 		g.rotate(rot, getCenterX(), getCenterY());
-		g.drawImage((isSplitting ? splitting : normal).getFrame(), getIntX(), getIntY(), null);
 		
-//		g.setColor(Color.black);
-//		g.fill(getBounds());
-		
-		if(isHighlighted) {
-			Stroke s = g.getStroke();
-			g.setStroke(new BasicStroke(2));
-			g.setColor(Color.green);
-			g.draw(getBounds());
-			g.setStroke(s);
+		if(isAlive) {
+			g.drawImage((isSplitting ? splitting : normal).getFrame(), getIntX(), getIntY(), null);
+			
+			if(isHighlighted) {
+				Stroke s = g.getStroke();
+				g.setStroke(new BasicStroke(2));
+				g.setColor(Color.green);
+				g.draw(getBounds());
+				g.setStroke(s);
+			}
+			
+			g.setColor(Color.gray);
+			g.fillRect(getIntX()-5, getIntY()-15, getIntWidth()+10, 10);
+			g.setColor(TeamColor.values()[team].color);
+			g.fillRect(getIntX()-5, getIntY()-15, (int)Math.round((getWidth() + 10) * (double)health/type.initialHealth), 10);
 		}
-		
-		g.setColor(Color.red);
-		g.fillRect(getIntX()-5, getIntY()-15, (int)Math.round((getWidth() + 10) * (double)health/type.initialHealth), 10);
+		else
+			g.drawImage(normal.getFrame(), getIntX(), getIntY(), getIntWidth(), getIntHeight(), Color.green, null);
 	}
 }

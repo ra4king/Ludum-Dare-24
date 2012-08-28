@@ -2,7 +2,7 @@ package com.ra4king.ld24;
 
 import com.ra4king.gameutils.Game;
 
-public class LudumDare24 extends Game{
+public class LudumDare24 extends Game {
 	private static final long serialVersionUID = 1L;
 	
 	public static void main(String[] args) {
@@ -12,7 +12,7 @@ public class LudumDare24 extends Game{
 	}
 	
 	public LudumDare24() {
-		super(800, 600);
+		super(1024, 768);
 	}
 	
 	@Override
@@ -20,11 +20,15 @@ public class LudumDare24 extends Game{
 		try {
 			getArt().add("images/amoeba.png");
 			getArt().add("images/amoeba-splits.png");
+			
+			getSound().add("music/background.ogg");
 		}
 		catch(Exception exc) {
 			exc.printStackTrace();
 			System.exit(0);
 		}
+		
+		getSound().loop("background");
 		
 		setScreen("Arena", new Arena());
 	}
