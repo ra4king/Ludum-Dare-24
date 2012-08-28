@@ -2,6 +2,7 @@ package com.ra4king.ld24;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import com.ra4king.gameutils.Game;
@@ -23,11 +24,10 @@ public class Arena extends GameWorld {
 	public void init(Game game) {
 		super.init(game);
 		
-		
-		Unit u = (Unit)add(1,new Unit(UnitType.AMOEBA, 0));
+		Unit u = (Unit)add(1,new Unit(UnitType.CELL, 0));
 		u.setLocation(0, 0);
 		
-		u = (Unit)add(1,new Unit(UnitType.AMOEBA, 1));
+		u = (Unit)add(1,new Unit(UnitType.CELL, 1));
 		u.setLocation(getWidth() - u.getWidth(), getHeight() - u.getHeight());
 		
 		spawnFoods();
@@ -60,6 +60,12 @@ public class Arena extends GameWorld {
 		super.draw(g);
 		
 		hud.draw(g);
+	}
+	
+	@Override
+	public void keyPressed(KeyEvent key) {
+		if(key.getKeyCode() == KeyEvent.VK_R)
+			getGame().setScreen("Arena", new Arena());
 	}
 	
 	@Override

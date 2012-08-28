@@ -18,8 +18,8 @@ public class CellWar extends Game {
 	@Override
 	public void initGame() {
 		try {
-			getArt().add("images/amoeba.png");
-			getArt().add("images/amoeba-splits.png");
+			getArt().add("images/cell.png");
+			getArt().add("images/cell-splits.png");
 			
 			getSound().add("music/background.ogg");
 		}

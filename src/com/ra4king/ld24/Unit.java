@@ -16,10 +16,7 @@ import com.ra4king.gameutils.util.FastMath;
 
 public class Unit extends GameComponent {
 	public static enum UnitType {
-		AMOEBA(50,50,100,10);
-//		DIATOM(40,40,40),
-//		KRILL(40,40,50),
-//		SLUG(50,50,60);
+		CELL(50,50,100,10);
 		
 		private BufferedImage[][] frames, split;
 		private int width, height, initialHealth, foodToSplit;
@@ -150,7 +147,7 @@ public class Unit extends GameComponent {
 		for(Entity e : getParent().getEntitiesAt(0)) {
 			Food f = (Food)e;
 			
-			double dist = (f.getX()-getX()) * (f.getX()-getX()) + (f.getY()-getY()) * (f.getY()-getY());
+			double dist = (f.getCenterX()-getCenterX()) * (f.getCenterX()-getCenterX()) + (f.getCenterY()-getCenterY()) * (f.getCenterY()-getCenterY());
 			if(dist < closestDist) {
 				closest = f;
 				closestDist = dist;
@@ -190,8 +187,13 @@ public class Unit extends GameComponent {
 				if(!isSplitting && target != null && getParent().contains(target)) {
 					double r = FastMath.atan2(target.getY() - getCenterY(), target.getX() - getCenterX());
 					
-					if(Math.abs(r - rot) > Math.PI)
-						r = r-(2*Math.PI);
+					r %= (2*Math.PI);
+					
+					while(r < 0)
+						r += 2*Math.PI;
+					
+					if(Math.abs(r-rot) > Math.PI)
+						r -= 2*Math.PI;
 					
 					rot += (r-rot) * (5*delta);
 					
