@@ -7,7 +7,7 @@ public class CellWar extends Game {
 	
 	public static void main(String[] args) {
 		CellWar game = new CellWar();
-		game.setupFrame("Ludum Dare 24", true);
+		game.setupFrame("Ludum Dare 24 - Cell War", true);
 		game.start();
 	}
 	
