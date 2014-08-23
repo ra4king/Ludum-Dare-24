@@ -236,13 +236,16 @@ public class Unit extends GameComponent {
 			}
 			
 			for(Entity e : getParent().getEntities()) {
-				if(e instanceof Food && ((Food)e).intersects(this)) {
+				if(e == this)
+					continue;
+				
+				if(e instanceof Food && e.intersects(this)) {
 					getParent().remove(e);
 					foodEaten++;
 					health = Math.min(health+10, type.initialHealth);
 					checkForSplit();
 				}
-				else if(e instanceof Unit && ((Unit)e).intersects(this)) {
+				else if(e instanceof Unit && e.intersects(this)) {
 					Unit u = (Unit)e;
 					
 					if(!u.isAlive) {

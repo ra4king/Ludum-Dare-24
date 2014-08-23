@@ -25,7 +25,7 @@ public class CellWar extends Game {
 		}
 		catch(Exception exc) {
 			exc.printStackTrace();
-			System.exit(0);
+			//System.exit(0);
 		}
 		
 		getSound().loop("background");

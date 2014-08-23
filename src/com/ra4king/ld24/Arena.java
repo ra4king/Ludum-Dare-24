@@ -12,7 +12,7 @@ import com.ra4king.ld24.Unit.UnitType;
 public class Arena extends GameWorld {
 	private HUD hud;
 	
-	private long elapsedTime;
+	private long elapsedTime, totalElapsedTime;
 	
 	public Arena() {
 		setBackground(Color.blue);
@@ -35,7 +35,10 @@ public class Arena extends GameWorld {
 	}
 	
 	private void spawnFoods() {
-		double foodCount = (Math.sqrt((getWidth()/2) * (getHeight()/2))/3) * Math.random() + 20;
+		double foodCount = ((Math.sqrt((getWidth()/2) * (getHeight()/2))/3) * Math.random()) * Math.max(0, 1 - (totalElapsedTime / 120e9)) + 20;
+		
+		System.out.println("Spawning " + (int)foodCount + " food.");
+		
 		for(int a = 0; a < foodCount; a++)
 			add(0,new Food(Math.random() * (getWidth() - 3), Math.random() * (getHeight() - 3)));
 	}
@@ -45,6 +48,7 @@ public class Arena extends GameWorld {
 		super.update(deltaTime);
 		
 		elapsedTime += deltaTime;
+		totalElapsedTime += deltaTime;
 		
 		if(elapsedTime >= 1e9) {
 			elapsedTime -= 1e9;
